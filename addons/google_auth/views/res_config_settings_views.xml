@@ -5,7 +5,7 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="base.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('settings')]" position="inside">
+            <form position="inside">
                 <div class="app_settings_block" data-string="Google OAuth2" string="Google OAuth2" data-key="google_auth">
                     <h2>Google OAuth2 Settings</h2>
                     <div class="row mt16 o_settings_container">
@@ -17,19 +17,19 @@
                                 </div>
                                 <div class="content-group">
                                     <div class="row mt16">
-                                        <label class="col-lg-3" for="google_oauth_client_id"/>
-                                        <field name="google_oauth_client_id"/>
+                                        <label class="col-lg-3" for="google_oauth_client_id">Client ID</label>
+                                        <field name="google_oauth_client_id" class="col-lg-9"/>
                                     </div>
                                     <div class="row mt16">
-                                        <label class="col-lg-3" for="google_oauth_client_secret"/>
-                                        <field name="google_oauth_client_secret" password="True"/>
+                                        <label class="col-lg-3" for="google_oauth_client_secret">Client Secret</label>
+                                        <field name="google_oauth_client_secret" password="True" class="col-lg-9"/>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </xpath>
+            </form>
         </field>
     </record>
 </odoo>
