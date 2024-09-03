@@ -1,4 +1,4 @@
-#!/home/brmz/Documents/Projects/School/odoo/venv/bin/python3
+#!/home/brmz/Documents/Projects/School/ALG06/odoo/venv/bin/python3
 # :Copyright: © 2015 Günter Milde.
 # :License: Released under the terms of the `2-Clause BSD license`_, in short:
 #

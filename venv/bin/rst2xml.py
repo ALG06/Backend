@@ -1,4 +1,4 @@
-#!/home/brmz/Documents/Projects/School/odoo/venv/bin/python3
+#!/home/brmz/Documents/Projects/School/ALG06/odoo/venv/bin/python3
 
 # $Id: rst2xml.py 9115 2022-07-28 17:06:24Z milde $
 # Author: David Goodger <goodger@python.org>
