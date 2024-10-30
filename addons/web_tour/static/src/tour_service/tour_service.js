@@ -45,10 +45,7 @@ const TourSchema = {
     checkDelay: { type: Number, optional: true },
     name: { type: String, optional: true },
     saveAs: { type: String, optional: true },
-    rainbowManMessage: { type: [String, Boolean, Function], optional: true },
-    sequence: { type: Number, optional: true },
     steps: Function,
-    test: { type: Boolean, optional: true },
     url: { type: String, optional: true },
     wait_for: { type: [Function, Object], optional: true },
 };
@@ -249,7 +246,11 @@ export const tourService = {
             }
 
             if (tourState.getCurrentTour()) {
-                resumeTour();
+                if (tourState.getCurrentConfig().mode === "auto" || toursEnabled) {
+                    resumeTour();
+                } else {
+                    tourState.clear();
+                }
             } else if (session.current_tour) {
                 startTour(session.current_tour.name, {
                     mode: "manual",

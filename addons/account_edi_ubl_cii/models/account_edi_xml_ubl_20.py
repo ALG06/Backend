@@ -225,7 +225,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         customer = line.move_id.commercial_partner_id
         supplier = line.move_id.company_id.partner_id.commercial_partner_id
         tax_category_vals_list = self._get_tax_category_list(customer, supplier, taxes)
-        description = line.name and line.name.replace('\n', ', ')
+        description = line.name and line.name.replace('\n', ' ')
         return {
             'description': description,
             'name': product.name or description,
@@ -480,7 +480,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # Compute values for invoice lines.
         line_extension_amount = 0.0
 
-        invoice_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section'))
+        invoice_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section') and line._check_edi_line_tax_required())
         document_allowance_charge_vals_list = self._get_document_allowance_charge_vals_list(invoice)
         invoice_line_vals_list = []
         for line_id, line in enumerate(invoice_lines):

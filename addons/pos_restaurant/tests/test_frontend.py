@@ -8,7 +8,7 @@ from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCom
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestFrontend(TestPointOfSaleHttpCommon):
+class TestFrontendCommon(TestPointOfSaleHttpCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -210,6 +210,9 @@ class TestFrontend(TestPointOfSaleHttpCommon):
         pricelist = cls.env['product.pricelist'].create({'name': 'Restaurant Pricelist'})
         cls.pos_config.write({'pricelist_id': pricelist.id})
 
+
+class TestFrontend(TestFrontendCommon):
+
     def test_01_pos_restaurant(self):
         self.pos_user.write({
             'groups_id': [
@@ -260,6 +263,9 @@ class TestFrontend(TestPointOfSaleHttpCommon):
         # orders order can be different depending on which module is install so we sort the tips
         order_tips.sort()
         self.assertEqual(order_tips, [0.0, 0.4, 1.0, 1.0, 1.5])
+
+        order4 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0004')], limit=1, order='id desc')
+        self.assertEqual(order4.customer_count, 2)
 
     def test_06_split_bill_screen(self):
         self.pos_config.with_user(self.pos_user).open_ui()
