@@ -593,13 +593,23 @@ class Users(models.Model):
         action_open_website = self.env.ref('base.action_open_website', raise_if_not_found=False)
         if action_open_website and any(user.action_id.id == action_open_website.id for user in self):
             raise ValidationError(_('The "App Switcher" action cannot be selected as home action.'))
-        # Prevent using reload actions.
         # We use sudo() because  "Access rights" admins can't read action models
         for user in self.sudo():
             if user.action_id.type == "ir.actions.client":
+                # Prevent using reload actions.
                 action = self.env["ir.actions.client"].browse(user.action_id.id)  # magic
                 if action.tag == "reload":
                     raise ValidationError(_('The "%s" action cannot be selected as home action.', action.name))
+
+            elif user.action_id.type == "ir.actions.act_window":
+                # Restrict actions that include 'active_id' in their context.
+                action = self.env["ir.actions.act_window"].browse(user.action_id.id)  # magic
+                if not action.context:
+                    continue
+                if "active_id" in action.context:
+                    raise ValidationError(
+                        _('The action "%s" cannot be set as the home action because it requires a record to be selected beforehand.', action.name)
+                    )
 
 
     @api.constrains('groups_id')
@@ -816,7 +826,8 @@ class Users(models.Model):
         domain = super()._search_display_name(operator, value)
         if operator in ('=', 'ilike') and value:
             name_domain = [('login', '=', value)]
-            domain = expression.OR([name_domain, domain])
+            if users := self.search(name_domain):
+                domain = [('id', 'in', users.ids)]
         return domain
 
     def copy_data(self, default=None):
@@ -859,7 +870,7 @@ class Users(models.Model):
         if lang not in langs:
             lang = request.best_lang if request else None
             if lang not in langs:
-                lang = self.env.user.company_id.partner_id.lang
+                lang = self.env.user.with_context(prefetch_fields=False).company_id.partner_id.lang
                 if lang not in langs:
                     lang = DEFAULT_LANG
                     if lang not in langs:
