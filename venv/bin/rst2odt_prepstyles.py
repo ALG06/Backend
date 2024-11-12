@@ -1,4 +1,4 @@
-#!/home/brmz/Documents/Projects/School/odoo/venv/bin/python3
+#!/home/brmz/Documents/Projects/School/ALG06/odoo/venv/bin/python3
 
 # Copyright: This module has been placed in the public domain.
 
